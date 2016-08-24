@@ -1,5 +1,31 @@
-.MPC {
-	border: 1px none #000000;
+.MPCtitle {
+	
+	color:"#000000";
+	font-size:default;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+
+}
+.MPCtext {
+
+	color:"#000000";
+	font-size:small;
+	font:"Arial";
+	font-family: Arial, Helvetica, sans-serif;
+	
+
+}
+.ulfloat,.lifloat{
+	font-size:smaller;
+ margin:0; 
+padding:0; 
+ list-style-position: inside;
+
+
+}
+
+.bannerimg {
+padding-bottom: 20px;
 
 
 }
