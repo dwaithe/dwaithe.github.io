@@ -5,6 +5,7 @@
 	font-family: Arial, Helvetica, sans-serif;
 	font-weight: bold;
 
+
 }
 .MPCtext {
 
@@ -12,7 +13,7 @@
 	font-size:small;
 	font:"Arial";
 	font-family: Arial, Helvetica, sans-serif;
-	
+	text-align: justify;
 
 }
 .ulfloat,.lifloat{
