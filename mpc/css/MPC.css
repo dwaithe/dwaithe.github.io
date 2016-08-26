@@ -18,15 +18,22 @@
 }
 .ulfloat,.lifloat{
 	font-size:smaller;
- margin:0; 
-padding:0; 
- list-style-position: inside;
-
+	margin:0; 
+	padding:0; 
+	list-style-position: inside;
 
 }
 
-.bannerimg {
-padding-bottom: 20px;
+.footfloat{
+	text-align:center;
+	font-size:x-small;
+	margin:0; 
+	padding:0; 
+ 	align-items: center;
+}
 
 
+.bookimg {
+	padding: 4px;
+	align: center;
 }
