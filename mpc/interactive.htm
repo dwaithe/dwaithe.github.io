@@ -9,15 +9,158 @@
   <script src="scripts/jquery.min.js"></script>
   <script src="scripts/bootstrap.min.js"></script>
   <script src="scripts/platform.js" async defer></script>
+   <link rel="stylesheet" href="css/blog.css">
+   <link rel="stylesheet" href="css/mpc.css">
+
   <meta name="keywords" content="mpc, education, schools, teachers, educators, minimal phonic cues, phonics, phonetics, national literacy strategy, 
 primary schools, reading, phonics training, phonics courses, Margaret Sanders, spelling, education, special needs, dyslexia, literacy, english, 
 adult illiteracy, illiteracy, regional differences, george bernard shaw, cue card,">
 <meta name="description" content="Minimal Phonic Cues (MPC) is an easily-learnt and simple method of learning to read for young students and adults.">
 <!-- InstanceBeginEditable name="head" -->
+<script type="text/javascript">
+// get canvas element.
 
+
+function collides(rects, x, y) {
+    var isCollision = false;
+    for (var i = 0, len = rects.length; i < len; i++) {
+        var left = rects[i].x, right = rects[i].x+rects[i].w;
+        var top = rects[i].y, bottom = rects[i].y+rects[i].h;
+        if (right >= x
+            && left <= x
+            && bottom >= y
+            && top <= y) {
+            isCollision = rects[i];
+        }
+    }
+    return isCollision;
+}
+
+
+         function drawShape(){
+            
+            // get the canvas element using the DOM
+            var canvas = document.getElementById('myCanvas');
+            
+            // Make sure we don't execute when canvas isn't supported
+            if (canvas.getContext){
+            
+               // use getContext to use the canvas for drawing
+               var ctx = canvas.getContext('2d');
+               
+               // Draw shapes
+               var img = new Image();
+               var imgbw = new Image();
+               imgbw.src = 'images/Cue Card/cue-card-colour-medium.png';
+               img.src = 'images/Cue Card/cue-card-mono-medium.png';
+               var width = img.width;
+              var height = img.height;
+               
+               img.onload = function(){
+                  ctx.drawImage(img,0,0);
+                  ctx.beginPath();
+                  // check if context exist
+                    if (canvas && canvas.getContext) {
+                        // list of rectangles to render
+                        var rects = [{x: 6, y: 8, w: 59, h: 87,i:0,s:'a-bar.mp3'},
+                                     {x: 68, y: 8, w: 61, h: 87,i:1,s:'e-bar.mp3'},
+                                     {x: 132, y: 8, w: 55, h: 87,i:2,s:'i-bar.mp3'},
+                                     {x: 190, y: 8, w: 55, h: 87,i:3,s:'o-bar.mp3'},
+                                     {x: 247, y: 8, w: 56, h: 87,i:4,s:'u-bar.mp3'},
+                                     {x: 306, y: 8, w: 56, h: 87,i:5,s:'b.mp3'},
+                                     {x: 364, y: 8, w: 58, h: 87,i:6,s:'c.mp3'},
+                                     {x: 425, y: 8, w: 56, h: 87,i:7,s:'d.mp3'},
+                                     {x: 483, y: 8, w: 61, h: 87,i:8,s:'f.mp3'},
+
+                                     {x: 6, y: 98, w: 59, h: 93,i:9,s:'a.mp3'},
+                                     {x: 68, y: 98, w: 61, h: 93,i:10,s:'e.mp3'},
+                                     {x: 132, y: 98, w: 55, h: 93,i:11,s:'i.mp3'},
+                                     {x: 190, y: 98, w: 55, h: 93,i:12,s:'o.mp3'},
+                                     {x: 247, y: 98, w: 56, h: 93,i:13,s:'u.mp3'},
+                                     {x: 306, y: 98, w: 56, h: 93,i:14,s:'g.mp3'},
+                                     {x: 364, y: 98, w: 58, h: 93,i:15,s:'h.mp3'},
+                                     {x: 425, y: 98, w: 56, h: 93,i:16,s:'j.mp3'},
+                                     {x: 483, y: 98, w: 61, h: 93,i:17,s:'k.mp3'},
+
+                                     {x: 6, y: 193, w: 59, h: 88,i:18,  s:'ah-slur.mp3'},
+                                     {x: 68, y: 193, w: 61, h: 88,i:19, s:'er-slur.mp3'},
+                                     {x: 132, y: 193, w: 55, h: 88,i:20,s:'oi-slur.mp3'},
+                                     {x: 190, y: 193, w: 55, h: 88,i:21,s:'oo-bar.mp3'},
+                                     {x: 247, y: 193, w: 56, h: 88,i:22,s:'au-slur.mp3'},
+                                     {x: 306, y: 193, w: 56, h: 88,i:23,s:'l.mp3'},
+                                     {x: 364, y: 193, w: 58, h: 88,i:24,s:'m.mp3'},
+                                     {x: 425, y: 193, w: 56, h: 88,i:25,s:'n.mp3'},
+                                     {x: 483, y: 193, w: 61, h: 88,i:26,s:'p.mp3'},
+
+                                     {x: 6, y: 283, w: 59, h: 89,i:27,   s:'air-slur.mp3'},
+                                     {x: 68, y: 283, w: 61, h: 89,i:28,  s:'qu-slur.mp3'},
+                                     {x: 132, y: 283, w: 55, h: 89,i:29, s:'ng-slur.mp3'},
+                                     {x: 190, y: 283, w: 55, h: 89,i:30, s:'oo-slur.mp3'},
+                                     {x: 247, y: 283, w: 56, h: 89,i:31, s:'ow-slur.mp3'},
+                                     {x: 306, y: 283, w: 56, h: 89,i:32, s:'r.mp3'},
+                                     {x: 364, y: 283, w: 58, h: 89,i:33, s:'s.mp3'},
+                                     {x: 425, y: 283, w: 56, h: 89,i:34, s:'t.mp3'},
+                                     {x: 483, y: 283, w: 61, h: 89,i:35, s:'v.mp3'},
+
+                                     {x: 6, y: 374, w: 59, h: 95,i:36,   s:'th-slur.mp3'},
+                                     {x: 68, y: 374, w: 61, h: 95,i:37,  s:'sh-slur.mp3'},
+                                     {x: 132, y: 374, w: 55, h: 95,i:38, s:'wh-slur.mp3'},
+                                     {x: 190, y: 374, w: 55, h: 95,i:39, s:'ch-slur.mp3'},
+                                     {x: 247, y: 374, w: 56, h: 95,i:40, s:'th-bar.mp3'},
+                                     {x: 306, y: 374, w: 56, h: 95,i:41, s:'w.mp3'},
+                                     {x: 364, y: 374, w: 58, h: 95,i:42, s:'x.mp3'},
+                                     {x: 425, y: 374, w: 56, h: 95,i:43, s:'y.mp3'},
+                                     {x: 483, y: 374, w: 61, h: 95,i:44, s:'z.mp3'},
+
+
+                                     ];
+                      // get context
+                      var context = canvas.getContext('2d');
+                      if (context) {
+                          ctx.fillStyle="#FF0000";
+
+                          for (var i = 0, len = rects.length; i < len; i++ ) {
+                            //context.fillRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
+                          }
+
+                      }
+                        var clicked = false;
+                        // listener, using W3C style for example    
+                        canvas.addEventListener('click', function(e) {
+                            
+                            var rect = collides(rects, e.offsetX, e.offsetY);
+                            if (clicked == false){
+                            if (rect) {
+                                clicked = true;
+                                
+                                ctx.drawImage(imgbw,rect.x,rect.y,rect.w,rect.h,rect.x,rect.y,rect.w,rect.h);
+                                var audio = new Audio('sound/'+rect.s);
+                                audio.play();
+                                audio.addEventListener("ended", function(){
+                                 audio.currentTime = 0;
+                                 console.log("ended");
+                                 clicked = false;
+                                 ctx.drawImage(img,rect.x,rect.y,rect.w,rect.h,rect.x,rect.y,rect.w,rect.h);
+                                  });
+
+
+                            } else {
+                                console.log('no collision');
+                            }}
+                        }, false);
+                    }
+               }
+            }
+            
+            else {
+               alert('You need Safari or Firefox 1.5+ to see this demo.');
+            }
+         }
+      </script>
+   </head>
 <link href="css/MPC.css" rel="stylesheet" type="text/css">
 </head>
-<body>
+<body onload="drawShape();">
 
 
 <img src='images/site/banner_crop_1.png'><img src='images/site/banner_crop_2.png'>
@@ -57,67 +200,58 @@ adult illiteracy, illiteracy, regional differences, george bernard shaw, cue car
 
     </ul>
   </div>
-</nav><table width="747" border="0" align="right" cellpadding="4" cellspacing="0">
-        <tr> 
-          <td width="73%" height="170" valign="top"><!-- InstanceBeginEditable name="main" -->
-            <p align="left"><font face="Arial, Helvetica, sans-serif"><strong>&gt;Interactive 
-              Cue Card</strong></font></p>
-            <p align="justify"><font color="#333333" size="2" face="Arial, Helvetica, sans-serif">Below 
-              is the Interactive Cue Card. It has been designed to illustrate 
+</nav>
+<div class="container">
+
+      
+        
+      <div class="blog-header">
+      <h1 class="blog-title">Interactive Cue Card</h1>
+      </div>
+
+        <div class="col-sm-8 blog-main">
+
+          <div class="blog-post">
+            <p class="MPCtitle">Fundamentals of Minimal Phonic Cues</p>
+      
+             
+      
+   
+
+
+              <p class="MPCtext">Below is the Interactive Cue Card. It has been designed to illustrate 
               a suggested method for using the Cue Card to teach the sounds of 
               the English language with MPC. Please click with the left mouse 
               button the below symbols to activate the mp3 clip for each sound. 
               For further help with using the Cue Card please refer to the <a href="arasa.htm">Teacher's 
-              Book</a>:</font></p>
-            <p align="justify"><font size="4" face="Verdana, Arial, Helvetica, sans-serif"> 
-              <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="550" height="450">
-                <param name="movie" value="images/Cue%20card/flash-cue-card-images-interactive.swf">
-                <param name="quality" value="high">
-                <embed src="images/Cue%20card/flash-cue-card-images-interactive.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="550" height="450"></embed></object>
-              </font></p>
-            <p align="justify">&nbsp;</p>
-            <p align="justify"><font size="4" face="Verdana, Arial, Helvetica, sans-serif"><strong><font size="3" face="Arial, Helvetica, sans-serif">&gt;Altering 
-              Interactive Cue Card pronunciation</font></strong></font><br>
+              Book</a>:</p>
+
+              <canvas id="myCanvas" width="550" height="476" ></canvas>
+
               <br>
-              <font color="#333333" size="2" face="Arial, Helvetica, sans-serif" align="justify">The 
-              above Interactive Cue Card has been linked to mp3 clips recorded 
+            
+              <p class="MPCtitle">Altering Interactive Cue Card pronunciation</p>
+              
+              <p class="MPCtext">The above Interactive Cue Card has been linked to mp3 clips recorded 
               using Standard Southern British English. If a user would like to 
               use the Interactive Cue Card as a tool for teaching, but would like 
-              to change the sound clips so they reflect a local dialect, this 
+              to change the sound clips, so they reflect a local dialect, this 
               is possible by following the below steps, which require some level 
-              of computer skill to perform:</font></p>
-            <ol>
-              <li> 
-                <div align="justify"><font color="#333333" size="2" face="Arial, Helvetica, sans-serif">Download 
-                  the interactive zip file by <a href="resources/MPC-Interactive-Cue-Card.zip">right 
-                  clicking this link</a>, and clicking &quot;Save Target As&quot;. 
-                  Save the file to a convenient location such as the desktop.</font></div>
-                <div align="justify"></div>
-              </li>
-              <li> 
-                <div align="justify"><font color="#333333" size="2" face="Arial, Helvetica, sans-serif">Locate 
-                  the zip file where it was saved (i.e. the desktop) and unzip 
-                  the contents to again a convenient location.</font></div>
-                <div align="justify"></div>
-              </li>
-              <li> 
-                <div align="justify"><font color="#333333" size="2" face="Arial, Helvetica, sans-serif">The 
-                  interactive cue card can be used by double clicking the interactive-cue-card.exe 
-                  file within the folder created by the unzipping process. The 
-                  interactive cue card functions in the same way as the web based 
-                  version above.</font></div>
-              </li>
-              <li><font color="#333333" size="2" face="Arial, Helvetica, sans-serif">To 
+              of computer skill to perform:</p>
+            <p class="MPCtext"> 
+                Using your browser, save this web page to a directory on your computer.</p>
+              <ol> 
+              <li class="MPCtext"> Create tow folders within the directory you have and name them 'sound' and 'images'.</li>
+               <li class="MPCtext"> Within the folder 'images' create a folder called 'Cue Card'.</li>
+               <li class="MPCtext"> <a href="images/Cue Card/cue-card-colour-medium.png"> Download this image (colour-medium) and place it in the folder named 'Cue Card'</a></li>
+               <li class="MPCtext"> <a href="images/Cue Card/cue-card-mono-medium.png"> Download this image (mono-medium) and place it in the folder named 'Cue Card'</a></li>
+              
+              <li class="MPCtext">To 
                 alter the pronunciation, &quot;mp3&quot; sound files must be recorded 
                 for each of the individual sounds that are being replaced. This 
                 can be achieved by using any commercial mp3 recording software 
-                and a microphone.</font></li>
-              <li><font color="#333333" size="2" face="Arial, Helvetica, sans-serif">The 
-                default &quot;mp3&quot; sound files for each of the MPC phonic 
-                sounds are located within the sound folder, which can be found 
-                within the root unzipped folder. The sound file names correspond 
-                to phonic sounds as follows:</font> <br>
-                <br>
+                and a microphone.</li>
+              <li>
                 <table width="100%" align="center" cellpadding="00" cellspacing="0">
                   <tr> 
                     <td width="3%" height="32"><div align="center"> 
@@ -153,7 +287,7 @@ adult illiteracy, illiteracy, regional differences, george bernard shaw, cue car
                     <td><div align="center"><strong><font face="Arial, Helvetica, sans-serif"><img src="images/words/oi.png" width="13" height="18"></font></strong></div></td>
                     <td><div align="center"><font size="2" face="Arial, Helvetica, sans-serif">oi-slur.mp3</font></div></td>
                     <td><div align="center"><strong><font face="Arial, Helvetica, sans-serif"><img src="images/words/oo.png" width="19" height="14"></font></strong></div></td>
-                    <td><div align="center"><font size="2" face="Arial, Helvetica, sans-serif">oo.mp3</font></div></td>
+                    <td><div align="center"><font size="2" face="Arial, Helvetica, sans-serif">oo-bar.mp3</font></div></td>
                     <td><div align="center"><strong><font face="Arial, Helvetica, sans-serif"><img src="images/words/au.png" width="18" height="15"></font></strong></div></td>
                     <td><div align="center"><font size="2" face="Arial, Helvetica, sans-serif">au-slur.mp3</font></div></td>
                   </tr>
@@ -179,7 +313,7 @@ adult illiteracy, illiteracy, regional differences, george bernard shaw, cue car
                     <td><div align="center"><strong><font face="Arial, Helvetica, sans-serif"><img src="images/words/ch.png" width="15" height="16"></font></strong></div></td>
                     <td><div align="center"><font size="2" face="Arial, Helvetica, sans-serif">ch-slur.mp3</font></div></td>
                     <td><div align="center"><strong><font face="Arial, Helvetica, sans-serif"><img src="images/words/th.png" width="13" height="15"></font></strong></div></td>
-                    <td><div align="center"><font size="2" face="Arial, Helvetica, sans-serif">th.mp3</font></div></td>
+                    <td><div align="center"><font size="2" face="Arial, Helvetica, sans-serif">th-bar.mp3</font></div></td>
                   </tr>
                   <tr> 
                     <td width="2%"><div align="center"><font face="Arial, Helvetica, sans-serif"><strong>b</strong></font></div></td>
@@ -257,89 +391,26 @@ adult illiteracy, illiteracy, regional differences, george bernard shaw, cue car
                   </tr>
                 </table>
               </li>
-              <li><font color="#333333" size="2" face="Arial, Helvetica, sans-serif">By 
+              <li>By 
                 replacing the default files named as above, with new dialect sounds 
                 files, using exactly the same filenames, they will be automatically 
-                incorporated into the Interactive Cue Card next time it is loaded.</font></li>
-            </ol>
-            <p>&nbsp;</p>
-            <!-- InstanceEndEditable --> 
-            <div align="center"> 
-              <p><br>
-                <font size="2" face="Arial, Helvetica, sans-serif"><font size="1"> 
-                - <a href="index.htm">Home</a> - <a href="resources.htm">Resources</a> 
-                - <a href="arasa.htm">Teachers book</a> - <a href="testimonials.htm">Testimonials</a> 
-                - <a href="author.htm">Authors statement</a> - <a href="contact.htm">Contact</a> 
-                - <a href="links.htm">Links</a> - <br>
-                </font></font><font size="1" face="Arial, Helvetica, sans-serif">&copy; 
-                2005 Margaret Sanders. Page last modified: 
-                <!-- #BeginDate format:Am1 -->September 13, 2005<!-- #EndDate -->
-                . <br>
-                Website design and development by <a href="http://www.odlogo.co.uk">www.odlogo.co.uk</a>.</font><font size="1"><br>
-                </font><font size="1" face="Arial, Helvetica, sans-serif">Site 
-                best viewed with Flash Player and at a resolution of at least 
-                800x600. </font><font size="2"><br>
-                </font> </p>
-              </div></td>
-          <td width="27%" valign="top"><!-- InstanceBeginEditable name="right" -->
-            <table width="100%" border="0" cellpadding="4" cellspacing="8" bordercolor="#000000">
-              <tr> 
-                <td bordercolor="#000000" bgcolor="#FFFFFF"><div align="justify"> 
-                    <table width="100%" border="1" cellpadding="4" cellspacing="0" bordercolor="#000000" class="MPC">
-                      <tr> 
-                        <td bordercolor="#000000" bgcolor="#CCECFF"><p align="justify"><font face="Arial, Helvetica, sans-serif"><strong>Cue 
-                            Card Images</strong><br>
-                            <font size="2">Static black and white and colour images 
-                            of the Cue Card are also available for printing and 
-                            using in class.<br>
-                            <a href="images/Cue%20card/cue-card-mono-large.png"><font face="Verdana, Arial, Helvetica, sans-serif">&gt;&gt;B&amp;W 
-                            Cue Card</font></a></font></font><font face="Verdana, Arial, Helvetica, sans-serif"><br>
-                            <a href="images/Cue%20card/cue-card-colour-large.png"><font size="2">&gt;&gt;Colour 
-                            Cue Card</font></a></font></p>
-                          </td>
-                      </tr>
-                    </table>
-                    <font size="3"> </font></div></td>
-              </tr>
-              <tr> 
-                <td height="151" valign="top"><div align="justify">
-                    <table width="100%" height="127" border="1" cellpadding="4" cellspacing="0" bordercolor="#000000" class="MPC">
-                      <tr> 
-                        <td height="125" bordercolor="#000000" bgcolor="#CCECFF"><div align="justify"> 
-                            <p><font face="Arial, Helvetica, sans-serif"><strong>MPC 
-                              CD <br>
-                              </strong></font><font size="2" face="Arial, Helvetica, sans-serif"> 
-                              To own a copy of all the MPC resources on the convenience 
-                              of a Compact Disc, please proceed to the contacts 
-                              section from where you can order one.<br>
-                              </font><font face="Arial, Helvetica, sans-serif"><font size="2"><a href="contact.htm">&gt;&gt;click 
-                              here to read more.</a></font></font></p>
-                          </div></td>
-                      </tr>
-                    </table>
-                  </div></td>
-              </tr>
-              <tr> 
-                <td height="119">&nbsp;</td>
-              </tr>
-              <tr> 
-                <td>&nbsp;</td>
-              </tr>
-              <tr> 
-                <td height="255"><p>&nbsp;</p>
-                  <p>&nbsp;</p>
-                  <p>&nbsp;</p>
-                  <p>&nbsp;</p>
-                  <p>&nbsp;</p>
-                  <p>&nbsp;</p></td>
-              </tr>
-              <tr> 
-                <td>&nbsp;</td>
-              </tr>
-            </table>
-            <!-- InstanceEndEditable --></td>
-        </tr>
-      </table>
+                incorporated into the Interactive Cue Card when you visit the downloaded page on your computer.</li>
+            
+            
+            </div>
+            </div>
+            <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          <div class="sidebar-module sidebar-module-inset">
+            <h4>Resources</h4>
+            <ul class='ulfloat'>
+              <li class="li"> <a href="images/Cue Card/cue-card-colour-medium.png"> Download the colour Cue Card</a></li>
+               <li class="li"> <a href="images/Cue Card/cue-card-mono-medium.png"> Download the black and white Cue Card</a></li>
+               </ul>
+               </div>
+               </div>
+
+
+            </div>
 <div >
                 <p class="footfloat">
                 <a href="index.htm">Home</a> - <a href="author.htm">The Author</a> - 
