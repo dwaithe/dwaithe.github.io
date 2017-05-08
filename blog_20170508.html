@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Blog 8th May 2017 - Activation functions used in deep learning</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/blog-home.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Activation functions used in deep learning.</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <!--
+                    <li>
+                        <a href="#">About</a>
+                    </li>
+                    <li>
+                        <a href="#">Services</a>
+                    </li>
+                    <li>
+                        <a href="#">Contact</a>
+                    </li>-->
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+
+            <!-- Blog Entries Column -->
+            <div class="col-md-8">
+
+                
+
+
+
+                <!-- First Blog Post -->
+                <h2>
+                    Activation functions used in deep learning, are they differentiable or not?
+                </h2>
+                <p><span class="glyphicon glyphicon-time"></span> Posted on May 08, 2017 at 5:02 PM</p>
+                <hr>
+                <p class="lead">
+                    by <a href="https://twitter.com/dwaithe">Dominic Waithe</a>
+                </p>
+                <h2>
+                    Introduction
+                </h2>
+                <p> In a recent presentation I gave on the back-propagation algorithm, for neural network optimisation, the issue of differentiability came up with regard to certain activation functions. The back-propagation algorithm has the requirement that all the functions involved are differentiable, however some of the most popular activation functions used (e.g. ReLU) are in fact non-differentiable at certain points within the functions input range. So how is it that these functions are actually used in back-propagation? The simple answer is that, from a mathematical perspective, we cheat by ignoring the output of these functions at the non-differentiable points and over-write the output with a more manageable value. This blog post goes into the background of the differentiation, what it means and how it applies in this case. I will also describe the methods through which one can work around functions that are not differentiable along their entirety and what the implications are for back-propagation and neural networks. To do this I draw heavily from the book: “How to think about Analysis [<a href="#one">1</a>] by Lara Alcock, which proved indispensible for understanding this topic, along with other sources.</p>
+
+
+                <br>
+
+                <h2>
+                    Differentiation and differentiability
+                </h2>
+                 <p>Firstly some background on differentiation and what it means to be a differentiable. For example, the function <img width="10%" height="10%" src="images/fx_x.png"  alt="x2 function" >   is a function that maps real numbers to real numbers <img width="10%" height="10%" src="images/fmapsRtoR.png"  alt="real2real function" >. The function <img width="10%" height="10%" src="images/fx_x.png"  alt="x2 function" >  is smooth and at every point is differentiable. The function is continuous and differentiable throughout:
+                </p>
+                <img class="img-responsive" src="images/funx2.png"  alt="x2 function" >
+                <p> <strong>Above</strong> Visualisation of the function <img width="10%" height="10%" src="images/fx_x.png"  alt="x2 function" > . With zoom region shown on the right with theorectical tangent line (blue) </p>
+                
+                <p> This means that at every point of <img width="5%" height="5%" src="images/fx.png"  alt="x2 function" >   we could draw a tangent line and approximate the gradient. Analytically we can derive the derivative of <img width="5%" height="5%" src="images/fx.png"  alt="x2 function" >   and this is valid throughout x, the derivative of <img width="5%" height="5%" src="images/fx.png"  alt="x2 function" >   is  <img width="10%" height="10%" src="images/fprimex.png"  alt="x2 function" > . </p><p>
+                If you compare the above function to another function the Rectified Linear Unit (ReLU) function which is used commonly as an activation function. ReLu is also continuous, mapping <img width="10%" height="10%" src="images/fmapsRtoR.png"  alt="real2real function" >  and so any real number input will yield a real number output. Unlike <img width="10%" height="10%" src="images/fx_x.png"  alt="x2 function" >   however this function has parts of it that are non-differentiable. This is clear to see when we zoom in on the function  and can see that it is non-smooth (has a sharp corner x=0). Sharp corners are a classic indicator of a non-differential point on a function: </p>
+
+                <img class="img-responsive" src="images/runRelu.png"  alt="x2 function" >
+                <p> <strong>Above</strong> Visualisation of the ReLU function (green). With zoom region shown on the right with incorrect tangent lines (blue). </p>
+
+                <p>At a sharp corner, it is tempting to draw a tangent equally spaced from the two intersecting lines, or to even draw multiple tangents, as though visualising the line rotating round from one line to the other, however these would all be incorrect.  At any point, a graph either has a single meaningful gradient (and therefore a tangent) or it does not. At this corner, at the limit there is no meaningful tangent and so at this point of the function is not differentiable.
+The reason for this is that for a function to be differentiable at every point, its difference quotient must satisfy the following criteria:</p>
+
+
+<p align=center> f is only differentiable at a if and only if <img width="15%" height="15%" src="images/limQuotient.png"  alt="x2 function" >   exists. 
+</p>
+
+<p>If you break  <img width="5%" height="5%" src="images/fx.png"  alt="x2 function" > in to its components and differentiate it analytically it seems as though it should be fully differentiable:</p>
+<p align="center">
+ <img  width="20%" height="20%" src="images/funcRelu.png"  alt="x2 function" ></p>
+
+ 
+
+however this is incorrect. The function is not differentiable at zero and one should write the derivative of this function as the following:
+
+<p align="center">
+ <img  width="50%" height="50%" src="images/fprimex2rowsCorrect.png"  alt="x2 function" ></p>
+
+ 
+
+. For this reason I hope that is clear that functions which are not smooth throughout, which have sharp corners, will have regions that are not differentiable.
+</p>
+
+<H2>Activation functions for deep learning</H2>
+<p>The classical activation functions tanh and also the logistic sigmoid function are smooth functions throughout, if however you visualise some of the more recently introduced activation functions you will see that they are not smooth and have corners, although they are not differentiable throughout it is easy to find representations of these functions on the internet which suggest they are:</p>
+
+<img  width="100%" height="100%" src="images/activationFunctions.png"  alt="x2 function" ></p>
+
+<p> <strong>Above</strong> The activation function derivatives are shown using the conventional notation, despite the fact that some of the functions have points on them which are not differentiable [<a href="#two">2</a>].</p>
+     
+
+<p>From the example above [<a href="#two">2</a>]  the ReLU, and PReLU functions are non-differential despite the notation. The Binary step function is non-differentiable also, but the author of the above figure has indicated so with the line “? for <img  height="10"  src="images/x_fn.png"  alt="x2 function" > = 0”. So how is this possible? How is that we are using functions which are not fully differentiable for constructing Neural Networks which are composed of many of these functions and which must be differentiable for the training procedure to be performed?</p>
+
+<H2>Using activation functions for deep learning which contain non-differentiable points</H2> 
+ 
+<p>
+Functions like ReLU are used in neural networks due to the computational advantages of using these simple equations over more traditional activation functions like tanh or the logistic sigmoid function. The back-propagation algorithm used to optimise neural networks works under the pre-condition that all of the functions contained within the system are differentiable. As discussed ReLU and other variants are non-differentiable at specific points, so how are they used? Essentially, at the points at which they are non-differentiable the function is not evaluated and the output is replaced with a sensible value. For example for ReLU at <img  height="17"  src="images/prime.png"  alt="x2 function" > we just specify the output to be zero or one, which is reasonable given our usage. In Theano [<a href="#three">3</a>] for example it specified that <img   height="10"  src="images/x_fn.png"  alt="x2 function" > is not evaluated and taken to be 1 for <img   height="10"  src="images/x_fn.png"  alt="x2 function" > >= 0. This is not mathematically pure and one could imagine scenarios where this would cause problems, the reality is however that the neural networks that comprise of these functions work well and are stable and so this issue is over-looked in favour of computational efficiency.
+
+<H2>Conclusion</H2>
+<p>
+Some may argue that if we are just going to specify the output at non-differentiable point anyway, why bother with the extra text and the notation required to explain that this point is not calculable. Others will say that we are abusing notation and that we are over simplifying things for a lay-audience.  Well I can understand this from both points of view and from the point of view of succinctness and simplicity it doesn’t often appear, and that is why text like the above can be useful for fully understanding how certain circumstances come about for any interested parties.
+</p>
+
+<H2>References</H2>
+
+<p><a name="one">[1]</a> <a href="https://www.amazon.co.uk/Think-About-Analysis-Lara-Alcock/dp/0198723539">https://www.amazon.co.uk/Think-About-Analysis-Lara-Alcock/dp/0198723539</a></p>
+<p><a name="two">[2]</a> <a href="https://www.quora.com/Why-do-we-not-use-a-differentiable-approximation-of-ReLUs">https://www.quora.com/Why-do-we-not-use-a-differentiable-approximation-of-ReLUs</a></p>    
+<p><a name="three">[3]</a> <a href="https://groups.google.com/forum/#!topic/lasagne-users/_rWsIieuGmA">https://groups.google.com/forum/#!topic/lasagne-users/_rWsIieuGmA</a></p>        
+
+
+
+
+
+
+
+
+
+                <!---
+                <a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>--->
+
+                <hr>
+
+                <!-- Pager -->
+                <ul class="pager">
+                    <li class="previous">
+                        <a href="blog_20161127.html">&larr; Older</a>
+                    </li>
+                    <li class="next">
+                        <a href="#">Newer &rarr;</a>
+                    </li>
+                </ul>
+
+            </div>
+
+            
+        
+        <!-- /.row -->
+
+        <hr>
+                    <div class="col-md-4">
+
+        <div class="well">
+                    <h4>Blog Categories</h4>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <ul class="list-unstyled">
+                                <li><a href="https://dwaithe.github.io/">Back to blog home</a>
+                                
+                            </ul>
+                        </div>
+                        <!-- /.col-lg-6 -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                </div>
+                </div>
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Dominic Waithe 2016</p>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
