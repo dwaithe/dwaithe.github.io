@@ -85,7 +85,7 @@
                 <h2>
                     Introduction
                 </h2>
-                <p> In a recent presentation I gave on the back-propagation algorithm, for neural network optimisation, the issue of differentiability came up with regard to certain activation functions. The back-propagation algorithm has the requirement that all the functions involved are differentiable, however some of the most popular activation functions used (e.g. ReLU) are in fact non-differentiable at certain points within the functions input range. So how is it that these functions are actually used in back-propagation? The simple answer is that, from a mathematical perspective, we cheat by ignoring the output of these functions at the non-differentiable points and over-write the output with a more manageable value. This blog post goes into the background of the differentiation, what it means and how it applies in this case. I will also describe the methods through which one can work around functions that are not differentiable along their entirety and what the implications are for back-propagation and neural networks. To do this I draw heavily from the book: “How to think about Analysis [<a href="#one">1</a>] by Lara Alcock, which proved indispensible for understanding this topic, along with other sources.</p>
+                <p> In a recent presentation I gave on the back-propagation algorithm, for neural network optimisation, the issue of differentiability came up with regard to certain activation functions. The back-propagation algorithm has the requirement that all the functions involved are differentiable, however some of the most popular activation functions used (e.g. ReLU) are in fact non-differentiable at certain points within the functions input range. So how is it that these functions are actually used in back-propagation? The simple answer is that, from a mathematical perspective, we cheat by ignoring the output of these functions at the non-differentiable points and over-write the output with a more manageable value. This blog post goes into the background of the differentiation and how it applies in this case. I will also describe the methods through which one can work around functions that are not differentiable along their entirety and what the implications are for back-propagation and neural networks. To do this I draw heavily from the book: “How to think about Analysis [<a href="#one">1</a>] by Lara Alcock, which proved indispensible for understanding this topic, along with other sources.</p>
 
 
                 <br>
@@ -93,23 +93,25 @@
                 <h2>
                     Differentiation and differentiability
                 </h2>
-                 <p>Firstly some background on differentiation and what it means to be a differentiable. For example, the function <img width="10%" height="10%" src="images/fx_x.png"  alt="x2 function" >   is a function that maps real numbers to real numbers <img width="10%" height="10%" src="images/fmapsRtoR.png"  alt="real2real function" >. The function <img width="10%" height="10%" src="images/fx_x.png"  alt="x2 function" >  is smooth and at every point is differentiable. The function is continuous and differentiable throughout:
+                 <p>Firstly some background on differentiation and what it means to be a differentiable. For example, the function <img width="10%" height="10%" src="images/fx_x.png"  alt="x2 function" >   is a function that maps real numbers to real numbers <img width="10%" height="10%" src="images/fmapsRtoR.png"  alt="real2real function" >. The function <img width="10%" height="10%" src="images/fx_x.png"  alt="x2 function" >  is smooth and at every point is differentiable. T
                 </p>
                 <img class="img-responsive" src="images/funx2.png"  alt="x2 function" >
                 <p> <strong>Above</strong> Visualisation of the function <img width="10%" height="10%" src="images/fx_x.png"  alt="x2 function" > . With zoom region shown on the right with theorectical tangent line (blue) </p>
                 
-                <p> This means that at every point of <img width="5%" height="5%" src="images/fx.png"  alt="x2 function" >   we could draw a tangent line and approximate the gradient. Analytically we can derive the derivative of <img width="5%" height="5%" src="images/fx.png"  alt="x2 function" >   and this is valid throughout x, the derivative of <img width="5%" height="5%" src="images/fx.png"  alt="x2 function" >   is  <img width="10%" height="10%" src="images/fprimex.png"  alt="x2 function" > . </p><p>
-                If you compare the above function to another function the Rectified Linear Unit (ReLU) function which is used commonly as an activation function. ReLu is also continuous, mapping <img width="10%" height="10%" src="images/fmapsRtoR.png"  alt="real2real function" >  and so any real number input will yield a real number output. Unlike <img width="10%" height="10%" src="images/fx_x.png"  alt="x2 function" >   however this function has parts of it that are non-differentiable. This is clear to see when we zoom in on the function  and can see that it is non-smooth (has a sharp corner x=0). Sharp corners are a classic indicator of a non-differential point on a function: </p>
+                <p> The function <img width="10%" height="10%" src="images/fx_x.png"  alt="x2 function" > is continuous and differentiable throughout:This means that at every point of <img width="5%" height="5%" src="images/fx.png"  alt="x2 function" >   we could draw a tangent line and approximate the gradient. Analytically we can derive the derivative of <img width="5%" height="5%" src="images/fx.png"  alt="x2 function" >   and this is valid throughout x, the derivative of <img width="5%" height="5%" src="images/fx.png"  alt="x2 function" >   is  <img width="10%" height="10%" src="images/fprimex.png"  alt="x2 function" > . </p><p>
+                If you compare the above function to another function the Rectified Linear Unit (ReLU) function which is used commonly as an activation function. ReLU is also continuous, mapping <img width="10%" height="10%" src="images/fmapsRtoR.png"  alt="real2real function" >  and so any real number input will yield a real number output. Unlike <img width="10%" height="10%" src="images/fx_x.png"  alt="x2 function" >   however this function has parts of it that are non-differentiable. This is clear to see when we zoom in on the function  and can see that it is non-smooth (has a sharp corner x=0). Sharp corners are a classic indicator of a non-differential point on a function: </p>
 
                 <img class="img-responsive" src="images/runRelu.png"  alt="x2 function" >
                 <p> <strong>Above</strong> Visualisation of the ReLU function (green). With zoom region shown on the right with incorrect tangent lines (blue). </p>
 
-                <p>At a sharp corner, it is tempting to draw a tangent equally spaced from the two intersecting lines, or to even draw multiple tangents, as though visualising the line rotating round from one line to the other, however these would all be incorrect.  At any point, a graph either has a single meaningful gradient (and therefore a tangent) or it does not. At this corner, at the limit there is no meaningful tangent and so at this point of the function is not differentiable.
+                <p>At a sharp corner, it is tempting to draw a tangent equally spaced from the two intersecting lines, or to even draw multiple tangents, as though visualising the line rotating round from one line to the other, however these would all be incorrect.  At any point, a graph either has a single meaningful gradient (and therefore a tangent) or it does not. At this corner, at the limit, there is no meaningful tangent and so this point of the function is not differentiable.
 The reason for this is that for a function to be differentiable at every point, its difference quotient must satisfy the following criteria:</p>
 
 
-<p align=center> f is only differentiable at a if and only if <img width="15%" height="15%" src="images/limQuotient.png"  alt="x2 function" >   exists. 
+<p align=center> <img  height="14" src="images/f.png"> is only differentiable at <img  height="10" src="images/a.png"> if and only if <img width="15%" height="15%" src="images/limQuotient.png"  alt="x2 function" >   exists. 
 </p>
+
+<p>Where <img  height="10" src="images/a.png">  is constant very similar to  <img  height="14" src="images/f.png">. If we approach <img  height="10" src="images/x_fn.png">  with  <img  height="10" src="images/a.png">  from the above we can see that the difference quotient tends to infinity which means the tangent at this point does not exist.</p>
 
 <p>If you break  <img width="5%" height="5%" src="images/fx.png"  alt="x2 function" > in to its components and differentiate it analytically it seems as though it should be fully differentiable:</p>
 <p align="center">
@@ -124,7 +126,7 @@ however this is incorrect. The function is not differentiable at zero and one sh
 
  
 
-. For this reason I hope that is clear that functions which are not smooth throughout, which have sharp corners, will have regions that are not differentiable.
+. In summary, functions which are not smooth throughout, which have sharp corners, will have regions that are not differentiable. Sharp corners cannot have a meaningful tangent placed on them and fail the 
 </p>
 
 <H2>Activation functions for deep learning</H2>
